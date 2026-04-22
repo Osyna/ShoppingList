@@ -11,6 +11,18 @@ if ! command -v tmux >/dev/null 2>&1; then
   exit 1
 fi
 
+# Seed a local .env on first run so VITE_PB_URL is defined. Vite auto-loads
+# .env for `npm run dev`, and the app throws at startup if it's missing.
+if [[ ! -f .env ]]; then
+  if [[ -f .env.example ]]; then
+    cp .env.example .env
+    echo "Created .env from .env.example — edit VITE_PB_URL if needed."
+  else
+    echo "VITE_PB_URL=https://shplst.osyna.com" > .env
+    echo "Created .env with default VITE_PB_URL."
+  fi
+fi
+
 if [[ ! -d node_modules ]]; then
   echo "Installing dependencies…"
   npm install

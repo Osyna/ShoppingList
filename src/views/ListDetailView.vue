@@ -75,12 +75,11 @@ async function onEditSubmit(input: ItemInput) {
   }
 }
 
-async function toggleItem(it: Item) {
-  try {
-    await items.toggle(it.id)
-  } catch (e) {
-    handleError(e)
-  }
+function toggleItem(it: Item) {
+  // Fire-and-forget: the store does an optimistic flip synchronously, so the
+  // UI re-renders on the same tick. Errors are surfaced via toast; awaiting
+  // here would block the caller behind the network round-trip for no benefit.
+  items.toggle(it.id).catch(handleError)
 }
 
 async function confirmDelete() {

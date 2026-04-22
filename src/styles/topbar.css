@@ -6,6 +6,12 @@
   justify-content: space-between;
   gap: 10px;
 }
+@media (min-width: 640px) {
+  .topbar { padding: 18px 28px 6px; }
+}
+@media (min-width: 1024px) {
+  .topbar { padding: 22px 40px 8px; }
+}
 .topbar.compact-top {
   padding: 12px 16px 6px 10px;
   gap: 8px;

@@ -3,6 +3,17 @@
   padding: 0 20px 28px;
   scroll-behavior: smooth;
 }
+.listwrap--lists {
+  padding-top: 8px;
+}
+@media (min-width: 640px) {
+  .listwrap { padding: 0 28px 32px; }
+  .listwrap--lists { padding-top: 10px; }
+}
+@media (min-width: 1024px) {
+  .listwrap { padding: 0 40px 44px; }
+  .listwrap--lists { padding-top: 14px; }
+}
 
 .section-label {
   display: flex;

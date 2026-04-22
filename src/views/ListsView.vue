@@ -135,7 +135,7 @@ const totalLists = computed(() => lists.lists.length)
       </div>
     </div>
 
-    <div class="listwrap" style="padding: 8px 20px 28px">
+    <div class="listwrap listwrap--lists">
       <button
         v-if="!showNewListForm"
         type="button"

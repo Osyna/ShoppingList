@@ -12,6 +12,11 @@ dist
 dist-ssr
 *.local
 
+# Local env files (may contain secrets). .env.example is the template.
+.env
+.env.*
+!.env.example
+
 # Playwright
 /test-results/
 /playwright-report/
