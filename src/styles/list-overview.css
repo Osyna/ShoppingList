@@ -1,0 +1,250 @@
+/* ================== List cards (overview) ================== */
+.list-card {
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 18px 18px 16px;
+  margin-bottom: 12px;
+  display: block;
+  text-decoration: none;
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  color: inherit;
+  text-align: left;
+}
+.list-card:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-card);
+  border-color: var(--line-2);
+}
+.list-card .title {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 26px;
+  line-height: 1.05;
+  margin: 0 0 2px;
+  color: var(--ink);
+}
+.list-card .meta {
+  color: var(--ink-3);
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+.list-card .pips {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+.list-card .pip {
+  height: 5px;
+  border-radius: 3px;
+  background: var(--paper-3);
+  flex: 1;
+  transition: background 220ms ease;
+}
+.list-card .pip.done {
+  background: var(--accent);
+}
+.list-card .footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--ink-3);
+  font-size: 12.5px;
+  gap: 10px;
+}
+.list-card-actions {
+  display: inline-flex;
+  gap: 2px;
+  align-items: center;
+}
+.list-card-add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1.5px dashed var(--line-2);
+  background: transparent;
+  color: var(--ink-3);
+  padding: 20px 18px;
+  width: 100%;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: var(--radius-lg);
+  margin-bottom: 12px;
+  transition: border-color 160ms ease, color 160ms ease, background 160ms ease;
+}
+.list-card-add:hover {
+  border-color: var(--ink-3);
+  color: var(--ink);
+  background: var(--paper-card);
+}
+.list-card-inline-edit {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* ================== Swipeable list card ================== */
+.swipe-card {
+  position: relative;
+  margin-bottom: 12px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: transparent;
+  isolation: isolate;
+}
+
+/* The sliding surface — content stays visible; only a tiny tactile nudge during drag. */
+.swipe-card .swipe-surface {
+  position: relative;
+  margin-bottom: 0;
+  cursor: pointer;
+  touch-action: pan-y;
+  transform: translate3d(var(--surface-offset, 0px), 0, 0);
+  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 180ms ease, box-shadow 180ms ease;
+  z-index: 1;
+}
+.swipe-card.is-dragging .swipe-surface {
+  transition: none;
+}
+.swipe-card .swipe-surface:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.swipe-card.is-open .swipe-surface {
+  border-color: var(--line-2);
+}
+
+/* Actions panel sits ABOVE the card and slides in from the trailing edge. */
+.swipe-card .swipe-actions {
+  position: absolute;
+  top: 6px;
+  right: 0;
+  bottom: 6px;
+  width: var(--swipe-panel-w, 224px);
+  padding: 2px 8px 2px 2px;
+  display: flex;
+  align-items: stretch;
+  gap: 2px;
+  pointer-events: none;
+  z-index: 2;
+  /* Hide entirely past the container's right edge. */
+  transform: translate3d(var(--actions-offset, 100%), 0, 0);
+  transition: transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+/* Tint band behind the tiles so they read as a cohesive panel, not floating chips. */
+.swipe-card .swipe-actions::before {
+  content: '';
+  position: absolute;
+  inset: 0 8px 0 0;
+  background: var(--paper-2);
+  border-radius: calc(var(--radius-lg) - 6px);
+  box-shadow: 0 1px 2px rgba(28, 26, 21, 0.05), 0 4px 14px rgba(28, 26, 21, 0.08);
+  z-index: -1;
+}
+.swipe-card.is-dragging .swipe-actions {
+  transition: none;
+}
+.swipe-card.is-open .swipe-actions {
+  pointer-events: auto;
+}
+
+.swipe-card .swipe-action {
+  flex: 1 1 0;
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  color: var(--ink-2);
+  border-radius: calc(var(--radius-lg) - 8px);
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  transition: background 140ms ease, color 140ms ease, filter 140ms ease;
+}
+.swipe-card .swipe-action:hover {
+  background: var(--paper-3);
+  color: var(--ink);
+}
+.swipe-card .swipe-action:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.swipe-card .swipe-action-danger {
+  background: var(--ink);
+  color: var(--paper);
+}
+.swipe-card .swipe-action-danger:hover {
+  background: var(--ink);
+  color: var(--paper);
+  filter: brightness(1.12);
+}
+
+.swipe-card-body {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.swipe-card-text {
+  flex: 1;
+  min-width: 0;
+}
+.swipe-card-text .title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.swipe-card-text .meta {
+  margin-bottom: 0;
+}
+
+/* Trailing grip — subtle vertical bar hinting at the swipe gesture. */
+.swipe-card-hint {
+  flex: 0 0 auto;
+  width: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-4);
+  opacity: calc(1 - var(--swipe-reveal, 0));
+  transition: opacity 200ms ease;
+}
+.swipe-card-hint .swipe-grip {
+  display: inline-block;
+  width: 3px;
+  height: 28px;
+  border-radius: 2px;
+  background: currentColor;
+  opacity: 0.35;
+}
+
+/* Desktop / precise pointer: reveal on hover as a discoverable fallback,
+   since swipe is awkward with a mouse. */
+@media (hover: hover) and (pointer: fine) {
+  .swipe-card:not(.is-editing):hover {
+    box-shadow: var(--shadow-card);
+  }
+  .swipe-card:not(.is-editing):hover .swipe-actions {
+    transform: translate3d(0, 0, 0) !important;
+    pointer-events: auto;
+  }
+  .swipe-card:not(.is-editing):hover .swipe-card-hint { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .swipe-card .swipe-surface,
+  .swipe-card .swipe-actions,
+  .swipe-card .swipe-action {
+    transition-duration: 0ms !important;
+  }
+}
+

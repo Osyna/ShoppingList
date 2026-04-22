@@ -1,0 +1,81 @@
+/* ================== Rule groups / switches ================== */
+.rule-group {
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.rule-group h4 {
+  margin: 0;
+  padding: 14px 18px 8px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.rule {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  border-top: 1px solid var(--line);
+}
+.rule:first-of-type,
+.rule-group h4 + .rule {
+  border-top: none;
+}
+.rule .rule-body {
+  flex: 1;
+  min-width: 0;
+}
+.rule .rule-title {
+  font-size: 15px;
+  color: var(--ink);
+  font-weight: 500;
+}
+.rule .rule-desc {
+  font-size: 13px;
+  color: var(--ink-3);
+  margin-top: 2px;
+}
+.rule-config {
+  padding: 4px 18px 16px;
+  display: grid;
+  gap: 10px;
+  border-top: 1px solid var(--line);
+  background: rgba(246, 241, 230, 0.45);
+}
+
+.switch {
+  width: 42px;
+  height: 24px;
+  border-radius: 999px;
+  background: var(--paper-3);
+  position: relative;
+  transition: background 200ms ease;
+  flex-shrink: 0;
+  padding: 0;
+  border: none;
+  cursor: pointer;
+}
+.switch i {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  transition: left 220ms cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+.switch.on {
+  background: var(--accent);
+}
+.switch.on i {
+  left: 20px;
+}
+

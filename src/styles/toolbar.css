@@ -1,0 +1,58 @@
+/* ================== Toolbar (sort/group) ================== */
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px 10px;
+  font-size: 13px;
+  color: var(--ink-3);
+  gap: 8px;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-2);
+  font-weight: 500;
+  font-size: 13px;
+  height: 28px;
+  min-width: 104px;
+  transition: background 140ms ease, transform 220ms var(--spring);
+  flex-shrink: 0;
+}
+.chip:hover {
+  background: var(--paper-2);
+}
+.chip:active {
+  transform: scale(0.94);
+  transition: transform 80ms var(--spring);
+}
+.chip.active {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.seg {
+  display: inline-flex;
+  background: var(--paper-2);
+  border-radius: 999px;
+  padding: 3px;
+  gap: 2px;
+}
+.seg button {
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--ink-3);
+}
+.seg button.active {
+  background: var(--paper-card);
+  color: var(--ink);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+

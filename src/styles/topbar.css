@@ -1,0 +1,86 @@
+/* ================== Topbar ================== */
+.topbar {
+  padding: 14px 20px 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.topbar.compact-top {
+  padding: 12px 16px 6px 10px;
+  gap: 8px;
+}
+.topbar.compact-top .back-chev {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-2);
+  flex-shrink: 0;
+  transition: background 160ms ease, transform 220ms var(--spring);
+}
+.topbar.compact-top .back-chev:hover {
+  background: var(--paper-2);
+}
+.topbar.compact-top .back-chev:active {
+  transform: scale(0.88);
+  transition: transform 80ms var(--spring);
+}
+.topbar.compact-top .title-inline {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  overflow: hidden;
+}
+.topbar.compact-top .title-inline h1 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 26px;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  margin: 0;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.topbar .back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink-3);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 8px 8px 0;
+}
+.topbar .back:hover {
+  color: var(--ink);
+}
+
+.icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-2);
+  transition: background 160ms ease, color 160ms ease, transform 220ms var(--spring);
+}
+.icon-btn:hover {
+  background: var(--paper-2);
+}
+.icon-btn:active {
+  background: var(--paper-3);
+  transform: scale(0.9);
+  transition: transform 80ms var(--spring);
+}
+.icon-btn.sm {
+  width: 32px;
+  height: 32px;
+}
+

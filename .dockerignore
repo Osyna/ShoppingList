@@ -1,0 +1,40 @@
+# Keep the build context tiny — Docker uploads everything below to the daemon.
+.git
+.github
+.gitignore
+.gitattributes
+
+node_modules
+dist
+dist-ssr
+coverage
+
+# Editor / OS noise
+.vscode
+.idea
+.DS_Store
+*.log
+
+# Tests — not needed for the production image (vue-tsc + build only)
+e2e
+tests
+playwright-report
+test-results
+playwright.config.ts
+vitest.config.ts
+
+# Local-only tooling
+.claude
+.cache
+.env
+.env.*
+!.env.example
+
+# Docs and scratchpads
+README.md
+PLAN.md
+*.md
+
+# Docker artifacts themselves
+Dockerfile
+.dockerignore

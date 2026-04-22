@@ -1,0 +1,133 @@
+{
+  "apple-fruit-icon.svg": [
+    "Pomme", "Pommes", "Pomme Granny", "Pomme Gala", "Pomme Pink Lady",
+    "Jus de pomme", "Compote de pomme", "Cidre", "Vinaigre de cidre", "Fruit"
+  ],
+  "avocado-icon.svg": ["Avocat"],
+  "banana-fruit-icon.svg": ["Banane", "Bananes"],
+  "beans-icon.svg": [
+    "Haricots verts", "Haricots rouges", "Petits pois", "Pois chiches",
+    "Lentilles", "Lentilles corail", "Haricots blancs", "Flageolets", "Fèves"
+  ],
+  "beer-icon.svg": ["Bière", "Bières", "Blonde", "IPA", "Stout"],
+  "beet-vegetable-icon.svg": ["Betterave", "Radis", "Navet"],
+  "bottle-wine-icon.svg": ["Vin", "Bouteille de vin", "Vin rouge", "Vin blanc", "Vin rosé"],
+  "bottled-water-icon.svg": ["Bouteille d'eau", "Eau plate", "Eau pétillante", "Eau minérale"],
+  "bread-icon.svg": [
+    "Pain", "Baguette", "Pain complet", "Pain pita", "Gressin",
+    "Galette", "Galette bretonne", "Wrap"
+  ],
+  "butter-icon.svg": ["Beurre", "Beurre doux", "Beurre salé", "Beurre de cacahuète", "Margarine"],
+  "cabbage-outline-icon.svg": [
+    "Chou", "Chou-fleur", "Brocoli", "Salade", "Salade mâche",
+    "Roquette", "Endive", "Épinards", "Laitue"
+  ],
+  "carrot-vegetable-icon.svg": ["Carotte", "Carottes"],
+  "cheers-icon.svg": ["Champagne", "Prosecco", "Apéritif", "Cocktail"],
+  "cheese-icon.svg": [
+    "Fromage", "Gruyère", "Parmesan", "Mozzarella", "Cheddar",
+    "Chèvre", "Feta", "Ricotta", "Philadelphia", "Passendale",
+    "Cottage cheese", "Skyr", "Fromage blanc", "Yaourt", "Yaourt grec",
+    "Petit suisse", "Crème", "Crème fraîche", "Crème liquide",
+    "Fromage à croque-monsieur"
+  ],
+  "chicken-leg-icon.svg": ["Cuisse de poulet", "Pilon", "Escalope de dinde"],
+  "chicken-rooster-line-icon.svg": ["Filet de poulet", "Poulet cru"],
+  "chili-vegetable-icon.svg": ["Poivron", "Piment", "Piment d'Espelette"],
+  "chocolate-icon.svg": ["Chocolat", "Chocolat noir", "Chocolat au lait", "Chocolat caramel salé"],
+  "cleaning-spray-icon.svg": [
+    "Lessive", "Produit vaisselle", "Produit lave-vaisselle",
+    "Produit WC", "Déboucheur WC", "Ajax", "Spray nettoyant",
+    "Nettoyant multi-usage"
+  ],
+  "cocktail-drink-glass-icon.svg": ["Cocktail", "Gin", "Aperol Spritz", "Mojito", "Glace", "Glace vanille"],
+  "coffee-icon.svg": ["Café", "Café moulu", "Café en grains", "Expresso", "Cappuccino"],
+  "cola-drink-bottle-icon.svg": ["Coca", "Coca-Cola", "Pepsi", "Soda"],
+  "cooking-dough-icon.svg": ["Pâte brisée", "Pâte feuilletée", "Pâte à pizza", "Pâte à tarte", "Pâte à farcir"],
+  "corn-vegetable-icon.svg": ["Maïs", "Farine de maïs", "Épi de maïs"],
+  "cucumber-vegetable-icon.svg": ["Concombre", "Courgette"],
+  "drop-icon.svg": ["Huile", "Pailles en inox"],
+  "egg-icon.svg": ["Œufs", "Oeufs", "Œuf", "Oeuf"],
+  "eggplant-vegetable-outline-icon.svg": ["Aubergine"],
+  "food-container-icon.svg": ["Conserve", "Thon en conserve", "Sardines", "Taboulé"],
+  "food-containers-icon.svg": ["Pois chiches (boîte)", "Conserves", "Bocal", "Bocaux"],
+  "garlic-outline-icon.svg": ["Ail", "Pâte d'ail", "Gousse d'ail"],
+  "glare-star-icon.svg": ["Promo", "Promotion", "Offre", "Nouveau", "Nouveauté", "Favori", "Étoile", "Premium", "Spécial", "Important"],
+  "glass-bottle-icon.svg": ["Sirop", "Sirop grenadine", "Huile Isio", "Huile d'olive", "Huile"],
+  "glass-jar-icon.svg": [
+    "Nutella", "Confiture", "Miel", "Olives", "Olives noires", "Olives vertes",
+    "Pesto", "Tahini", "Bouillon", "Bouillon de bœuf", "Bouillon de poulet",
+    "Bouillon de volaille", "Compote", "Pom'Pot", "Butter Chicken"
+  ],
+  "grain-sack-icon.svg": ["Farine", "Farine blanche", "Maïzena", "Semoule", "Quinoa", "Polenta", "Sac de farine"],
+  "grain-wheat-icon.svg": ["Céréales", "Cornflakes", "Muesli", "Granola", "Blé", "Avoine"],
+  "grapes-icon.svg": ["Raisin", "Raisins", "Raisins secs"],
+  "honeycomb-icon.svg": ["Miel", "Nid d'abeille", "Persil (épices)", "Épices moulues"],
+  "hot-tea-icon.svg": [
+    "Thé", "Thé noir", "Thé vert", "Thé blanc", "Earl Grey",
+    "Infusion", "Tisane", "Rooibos", "Camomille", "Verveine",
+    "Menthe poivrée", "Chaï", "Matcha", "Boisson chaude"
+  ],
+  "ketchup-bottle-icon.svg": ["Ketchup"],
+  "kiwi-icon.svg": ["Kiwi", "Mangue", "Ananas", "Papaye", "Grenade", "Fruit de la passion", "Litchi", "Carambole", "Fruit exotique"],
+  "meat-icon.svg": [
+    "Viande", "Viande hachée", "Haché bœuf", "Haché porc", "Haché porc et veau",
+    "Américain", "Steak", "Bœuf", "Jambon", "Jambon blanc", "Jambon fumé",
+    "Dés de jambon", "Lardon", "Lardons", "Lard", "Chorizo", "Saucisse",
+    "Saucisson", "Knack", "Knacki", "Boudin noir", "Mortadelle",
+    "Pâté", "Pâté du chef"
+  ],
+  "medicine-icon.svg": ["Médicament", "Médicaments", "Pharmacie"],
+  "milk-bottle-icon.svg": ["Lait", "Lait entier", "Lait demi-écrémé", "Lait écrémé", "Lait de coco", "Lait de soja", "Lait d'amande"],
+  "mushroom-outline-icon.svg": ["Champignon", "Champignons", "Champignons de Paris", "Cèpe"],
+  "noodle-icon.svg": [
+    "Pâtes", "Pâtes torsettes", "Pâtes aux légumes", "Nouilles", "Nouilles asiatiques",
+    "Spaghetti", "Coquillettes", "Rigatoni", "Tagliatelles", "Lasagnes", "Penne", "Fusilli"
+  ],
+  "onion-vegetable-icon.svg": ["Oignon", "Oignon blanc", "Oignon rouge", "Échalote"],
+  "orange-lemon-icon.svg": ["Citron", "Orange", "Clémentine", "Mandarine", "Pamplemousse", "Citron vert"],
+  "paper-bag-icon.svg": ["Sacs de congélation", "Sachets de congélation", "Papier cuisson", "Film étirable", "Sac papier"],
+  "peach-icon.svg": ["Pêche", "Nectarine", "Brugnon", "Abricot", "Prune", "Mirabelle", "Fruits à noyau"],
+  "pear-papaya-icon.svg": ["Poire", "Papaye", "Goyave", "Coing", "Nashi", "Fruit à pépins"],
+  "pet-bottle-icon.svg": ["Ice tea", "Jus de fruits", "Jus d'orange", "Bouteille plastique"],
+  "pharmacy-pills-icon.svg": ["Pastilles lave-vaisselle", "Pastille WC", "Tampon", "Dentifrice", "Brosse à dents", "Comprimés", "Médicaments"],
+  "pickle-jar-icon.svg": ["Cornichon", "Cornichons", "Pickles"],
+  "pie-dish-food-icon.svg": ["Quiche", "Tarte", "Gâteau", "Pizza", "Plat préparé"],
+  "pig-piggy-icon.svg": ["Côte de porc", "Porc", "Filet mignon"],
+  "pizza-food-icon.svg": ["Pizza"],
+  "potato-outline-icon.svg": ["Pomme de terre", "Patate", "Patate douce"],
+  "pumpkin-line-icon.svg": ["Potiron", "Citrouille", "Butternut", "Courge"],
+  "recycle-trash-bin-icon.svg": ["Sac poubelle", "Sacs poubelle", "Poubelle"],
+  "rice-bowl-icon.svg": ["Riz", "Riz basmati", "Riz thaï", "Risotto"],
+  "rooster-head-icon.svg": ["Poulet", "Volaille", "Coq"],
+  "rubbing-brush-icon.svg": ["Éponge", "Éponge vaisselle", "Scotch-Brite", "Brosse"],
+  "salt-seasoning-icon.svg": ["Sel", "Poivre", "Assaisonnement"],
+  "sandwich-icon.svg": ["Sandwich", "Pain burger", "Burger", "Hot-dog"],
+  "sauce-bottle-icon.svg": [
+    "Sauce", "Sauce tomate", "Sauce soja", "Sauce soja salée", "Sauce soja sucrée",
+    "Sauce aigre-douce", "Moutarde", "Vinaigre", "Vinaigre de vin",
+    "Mayonnaise", "Harissa", "Pâte de curry", "Pulpe de tomate"
+  ],
+  "sesame-outline-icon.svg": ["Graines de chia", "Graines de sésame", "Amandes", "Noix de cajou", "Fruits secs"],
+  "shampoo-icon.svg": ["Shampoing", "Après-shampoing", "Gel douche"],
+  "shiny-window-icon.svg": ["Nettoyant vitres", "Monsieur Propre", "Produit multi-usage"],
+  "shopping-icon.svg": ["Divers", "Courses", "Article", "Autre"],
+  "shrimp-icon.svg": ["Crevettes", "Crevette", "Gambas", "Fruits de mer", "Poisson", "Saumon", "Saumon fumé", "Thon", "Maquereau"],
+  "small-plastic-bottle-drink-icon.svg": ["Petite bouteille", "Bouteille individuelle", "Petites bouteilles d'eau"],
+  "snacks-icon.svg": ["Chips", "Chips apéro", "Apéritif", "Snack", "Gâteau apéro", "Biscuits apéro"],
+  "soap-icon.svg": ["Savon", "Déodorant", "Gel antibactérien"],
+  "soda-can-black-icon.svg": ["Canette", "Monster", "Nalu", "Red Bull", "Boisson énergisante"],
+  "soda-glass-bottle-icon.svg": ["Tonic", "Schweppes", "Cidre", "Limonade"],
+  "strawberry-icon.svg": ["Fraise", "Framboise", "Mûre", "Myrtille", "Cassis", "Fruits rouges", "Baies"],
+  "sugar-jar-icon.svg": ["Sucre", "Sucre en poudre", "Sucre semoule", "Cassonade"],
+  "sunflower-plant-black-icon.svg": ["Épices", "Curry", "Garam Masala", "Épices tandoori", "Paprika", "Cumin"],
+  "tissue-icon.svg": ["Mouchoir", "Mouchoirs", "Sopalin", "Serviettes en papier", "Papier toilette", "Coton", "Cotons démaquillants", "Coton-tige", "Coton-tiges"],
+  "toast-icon.svg": ["Pain de mie", "Biscotte", "Tartine grillée", "Toast"],
+  "tobacco-icon.svg": ["Tabac", "Cigarette", "Cigarettes", "Cigare", "Tabac à rouler", "Filtres", "Briquet", "Allumettes", "Vapoteuse", "E-cigarette", "Puff", "Nicotine"],
+  "tomato-vegetable-icon.svg": ["Tomate", "Tomates", "Tomates cerises", "Tomates séchées"],
+  "towel-icon.svg": ["Serviette", "Torchon", "Sopalin", "Essuie-tout"],
+  "tree-icon.svg": ["Poireau", "Asperge", "Céleri"],
+  "tree-plant-icon.svg": ["Persil", "Basilic", "Menthe", "Ciboulette", "Coriandre", "Aromates", "Herbes fraîches"],
+  "ultraviolet-uv-black-icon.svg": ["Crème solaire", "Protection solaire", "Écran solaire", "SPF", "Après-soleil", "UV", "Autobronzant"],
+  "water-icon.svg": ["Eau", "Eau déminéralisée", "Goutte d'eau"]
+}

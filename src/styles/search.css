@@ -1,0 +1,174 @@
+/* ================== Search / Quick add ================== */
+.searchwrap {
+  padding: 4px 16px 8px;
+  position: relative;
+  z-index: 30;
+}
+.search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 12px 14px;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+.search:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+.search > svg {
+  flex-shrink: 0;
+  color: var(--ink-4);
+}
+.search input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 15.5px;
+  color: var(--ink);
+  min-width: 0;
+}
+.search input::placeholder {
+  color: var(--ink-4);
+}
+.search .add-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transform: scale(0.92);
+  opacity: 0;
+  transition: transform 180ms cubic-bezier(0.2, 0.9, 0.3, 1.2), opacity 160ms ease;
+  flex-shrink: 0;
+}
+.search .add-btn.visible {
+  transform: scale(1);
+  opacity: 1;
+}
+.search .add-btn:hover {
+  filter: brightness(1.05);
+}
+.search-conflict {
+  margin: 0;
+  padding: 6px 14px 10px;
+  font-size: 12px;
+  color: var(--accent-ink);
+}
+
+/* Combined search + dropdown box — input card + floating dropdown */
+.searchbox {
+  position: relative;
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  transition: border-color 160ms ease, box-shadow 160ms ease, border-radius 140ms ease;
+}
+.searchbox:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+.searchbox.open {
+  border-radius: 14px 14px 0 0;
+}
+.searchbox .search {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 12px 14px;
+}
+.searchbox .search:focus-within {
+  box-shadow: none;
+  border-color: transparent;
+}
+
+/* Scrollable item picker dropdown — floats over content below without reflowing */
+.ac {
+  position: absolute;
+  top: 100%;
+  left: -1px;
+  right: -1px;
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+  border-top: none;
+  border-radius: 0 0 14px 14px;
+  box-shadow: var(--shadow-pop);
+  overflow: hidden;
+  max-height: 340px;
+  display: flex;
+  flex-direction: column;
+  animation: acPop 140ms ease;
+  z-index: 40;
+}
+.searchbox:focus-within .ac {
+  border-color: var(--accent);
+}
+@keyframes acPop {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.ac-scroll {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.ac-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.ac-scroll::-webkit-scrollbar-thumb {
+  background: var(--line-2);
+  border-radius: 999px;
+}
+.ac-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 14.5px;
+  color: var(--ink-2);
+  transition: background 140ms ease;
+  user-select: none;
+}
+.ac-item:hover,
+.ac-item.active {
+  background: var(--paper-2);
+  color: var(--ink);
+}
+.ac-item.done {
+  color: var(--ink-4);
+}
+.ac-item.done .ac-label {
+  text-decoration: line-through;
+  text-decoration-color: var(--ink-4);
+}
+.ac-item .cat-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.ac-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ac-qty {
+  color: var(--ink-4);
+  font-size: 13px;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+.ac-empty {
+  padding: 16px 14px;
+  font-size: 13.5px;
+  color: var(--ink-3);
+  text-align: center;
+}
+

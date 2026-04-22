@@ -1,0 +1,17 @@
+{
+  "fallback": "shopping-icon.svg",
+  "stopwords": [
+    "de", "des", "du", "la", "le", "les", "et", "ou", "au", "aux",
+    "a", "en", "un", "une", "sans", "avec", "pour", "par", "sur",
+    "grand", "grands", "grande", "grandes", "petit", "petits", "petite", "petites",
+    "boite", "boites", "pack", "packs", "paquet", "paquets", "sachet", "sachets",
+    "bio", "nature", "frais", "fraiche", "fraiches", "cru", "crue", "crues",
+    "cuit", "cuite", "cuits", "cuites"
+  ],
+  "thresholds": {
+    "substring": 0.6,
+    "token": 0.33,
+    "similarity": 0.72
+  },
+  "slugAliases": {}
+}

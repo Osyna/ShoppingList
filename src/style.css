@@ -1,0 +1,33 @@
+/*
+ * `@import` statements must come before any other CSS rules per the CSS spec,
+ * so they precede the Tailwind directives below.
+ *
+ * Design tokens are injected at runtime by `initTheme()` in `src/theme/apply.ts`.
+ * The canonical source is `src/design/tokens.ts`. Do not re-declare CSS custom
+ * properties here.
+ *
+ * Component styles live in `./styles/*.css`. Each file corresponds to a
+ * concern — look for the nearest-name file when editing a component's
+ * visual language.
+ */
+@import './styles/base.css';
+@import './styles/shell.css';
+@import './styles/topbar.css';
+@import './styles/header.css';
+@import './styles/search.css';
+@import './styles/toolbar.css';
+@import './styles/list-container.css';
+@import './styles/item-row.css';
+@import './styles/list-states.css';
+@import './styles/list-overview.css';
+@import './styles/rules.css';
+@import './styles/auth.css';
+@import './styles/surfaces.css';
+@import './styles/modal.css';
+@import './styles/fullscreen.css';
+@import './styles/toast.css';
+@import './styles/utils-forms.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

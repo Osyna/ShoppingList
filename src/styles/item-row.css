@@ -1,0 +1,206 @@
+/* ================== Item row ================== */
+.item-list {
+  position: relative;
+}
+.itemfx-move {
+  transition: transform 420ms var(--spring);
+}
+.itemfx-enter-active {
+  transition: transform 340ms var(--spring-bounce), opacity 220ms ease;
+}
+.itemfx-leave-active {
+  transition: transform 260ms var(--spring), opacity 200ms ease,
+    max-height 260ms var(--spring), margin 260ms var(--spring);
+  overflow: hidden;
+}
+.itemfx-enter-from {
+  opacity: 0;
+  transform: translateY(-6px) scale(0.98);
+  max-height: 0;
+  margin-bottom: 0;
+}
+.itemfx-enter-to,
+.itemfx-leave-from {
+  max-height: 80px;
+}
+.itemfx-leave-to {
+  opacity: 0;
+  transform: translateX(40px);
+  max-height: 0;
+  margin-bottom: 0;
+}
+
+.row {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius);
+  margin-bottom: 6px;
+}
+.row.removing {
+  transform: translateX(110%);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 260ms var(--spring-bounce), opacity 220ms ease;
+}
+
+.row .item {
+  position: relative;
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background 160ms ease, border-color 160ms ease,
+    transform 220ms var(--spring);
+  min-height: 48px;
+  will-change: transform;
+}
+.row .item:hover {
+  border-color: var(--line-2);
+}
+.row .label:active {
+  transform: scale(0.985);
+  transition: transform 80ms var(--spring);
+}
+
+.row.done .item {
+  background: #faf4e4;
+  border-color: var(--line);
+  opacity: 0.75;
+}
+.row .label {
+  flex: 1;
+  font-size: 14.5px;
+  color: var(--ink);
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  line-height: 1.3;
+  min-width: 0;
+}
+.row .label > span:first-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  position: relative;
+}
+.row .label .qty {
+  color: var(--ink-4);
+  font-size: 13px;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+.row.done .label {
+  color: var(--ink-4);
+  position: relative;
+}
+.row.done .label > span:first-child::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: var(--ink-4);
+  transform: translateY(-0.5px);
+  pointer-events: none;
+}
+
+.row .cat-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.row .food-tile {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--tint-1, rgba(0, 0, 0, 0.03));
+  flex-shrink: 0;
+  transition: opacity 180ms ease;
+}
+.row.done .food-tile {
+  opacity: 0.5;
+}
+
+/* ================== Check ================== */
+.check {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
+  border: 1.5px solid var(--line-2);
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 220ms var(--spring),
+    border-color 220ms var(--spring),
+    transform 220ms var(--spring-bounce);
+  position: relative;
+}
+.check:hover {
+  border-color: var(--ink-3);
+}
+.check:active {
+  transform: scale(0.88);
+  transition: transform 80ms var(--spring);
+}
+.check.checked {
+  transform: scale(1);
+}
+.check.checked:active {
+  transform: scale(0.9);
+}
+.check.checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.check svg {
+  color: #fff;
+  width: 14px;
+  height: 14px;
+  stroke-dasharray: 20;
+  stroke-dashoffset: 20;
+  transition: stroke-dashoffset 260ms ease 40ms;
+}
+.check.checked svg {
+  stroke-dashoffset: 0;
+}
+.burst {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.burst span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--ink-4);
+  opacity: 0;
+}
+.check.checked .burst span {
+  animation: burst 520ms ease-out forwards;
+}
+.check.checked .burst span:nth-child(1) { --tx: -18px; --ty: -14px; background: var(--ink-3); }
+.check.checked .burst span:nth-child(2) { --tx: 16px;  --ty: -18px; background: var(--ink-4); }
+.check.checked .burst span:nth-child(3) { --tx: -20px; --ty: 14px;  background: var(--ink-3); }
+.check.checked .burst span:nth-child(4) { --tx: 18px;  --ty: 16px;  background: var(--ink-4); }
+.check.checked .burst span:nth-child(5) { --tx: 0;     --ty: -22px; background: var(--ink-3); }
+@keyframes burst {
+  0%   { transform: translate(-50%, -50%) scale(0.3); opacity: 1; }
+  70%  { opacity: 1; }
+  100% { transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0.6); opacity: 0; }
+}
+
