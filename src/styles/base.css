@@ -9,10 +9,12 @@ html, body {
   overscroll-behavior-y: none;
 }
 
-/* iOS standalone PWA: match the status-bar area to the app's cream backdrop
-   so there's no jarring white strip under the notch when installed. */
+/* On phone and tablet the shell fills the viewport, so every edge the user
+   sees (including the iOS status bar / notch and home-bar safe areas) must
+   match the app body. On desktop the shell becomes a centered card, so we
+   swap to the darker backdrop below via a media query. */
 html {
-  background: var(--paper-backdrop);
+  background: var(--paper);
 }
 
 button, [role="button"], a {
@@ -38,7 +40,7 @@ body {
   margin: 0;
   font-family: var(--font-sans);
   color: var(--ink);
-  background: var(--paper-backdrop);
+  background: var(--paper);
   -webkit-font-smoothing: antialiased;
   font-feature-settings: 'ss01', 'ss02';
 }
@@ -48,7 +50,20 @@ body {
   display: flex;
   align-items: stretch;
   justify-content: center;
-  background: linear-gradient(180deg, var(--paper-backdrop-light) 0%, var(--paper-backdrop-dark) 100%);
+  background: var(--paper);
+}
+
+/* Desktop: restore the darker backdrop so the centered card reads as a
+   surface floating above the page. Mobile and tablet keep the flat paper
+   so the safe-area edges match the app shell. */
+@media (min-width: 1024px) {
+  html,
+  body {
+    background: var(--paper-backdrop);
+  }
+  #app {
+    background: linear-gradient(180deg, var(--paper-backdrop-light) 0%, var(--paper-backdrop-dark) 100%);
+  }
 }
 
 button {

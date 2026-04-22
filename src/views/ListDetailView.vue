@@ -184,6 +184,8 @@ function scrollToTop() {
         :name="g.name"
         :items="g.items"
         :color="g.color"
+        :group-key="g.key"
+        :list-id="list.id"
         :category-name-of="categoryNameOf"
         :color-for="colorForItem"
         @toggle="toggleItem"

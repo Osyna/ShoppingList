@@ -26,6 +26,34 @@
   text-transform: uppercase;
   padding: 10px 6px 6px;
 }
+/* Clickable group header: looks like a label, behaves like a disclosure. */
+button.section-label.section-label-btn {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-radius: 6px;
+  transition: background 140ms ease, color 140ms ease;
+}
+button.section-label.section-label-btn:hover {
+  color: var(--ink);
+  background: color-mix(in oklab, var(--ink) 5%, transparent);
+}
+.section-chevron {
+  margin-left: auto;
+  display: inline-flex;
+  color: var(--ink-4);
+  transform: rotate(-90deg);
+  transition: transform 180ms var(--spring);
+}
+.section-chevron.open {
+  transform: rotate(0deg);
+}
 .section-label .count {
   color: var(--ink-4);
   font-weight: 500;
