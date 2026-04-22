@@ -73,7 +73,9 @@
   border: 1px solid var(--line);
   border-radius: 12px;
   padding: 12px 14px;
-  font-size: 15px;
+  /* 16px minimum — any smaller and iOS Safari auto-zooms the viewport on
+     focus and never zooms back out, breaking the login / signup flow. */
+  font-size: 16px;
   color: var(--ink);
   transition: border-color 160ms ease, box-shadow 160ms ease;
   font-family: inherit;

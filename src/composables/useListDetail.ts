@@ -192,7 +192,12 @@ export function useListDetail(listId: Ref<string>, hideChecked?: Ref<boolean>) {
     const arr = [...groups.values()]
     arr.sort((a, b) => a.order - b.order || frCompare(a.name, b.name))
     for (const g of arr) {
-      g.items.sort((a, b) => Number(a.checked) - Number(b.checked) || compareItems(a, b))
+      // Intentionally do NOT sort checked items to the bottom within a
+      // category: that reorder forced a FLIP animation on every toggle and
+      // made checking items feel laggy. Strike-through + dim already
+      // communicate "done"; let rows keep their position until the next
+      // fetch / navigation re-sorts them.
+      g.items.sort(compareItems)
     }
     return arr
   })
