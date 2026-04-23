@@ -54,7 +54,6 @@
     radial-gradient(1px 1px at 30% 80%, rgba(28, 26, 21, 0.025) 50%, transparent 51%);
   background-size: 140px 140px, 90px 90px, 180px 180px, 110px 110px;
   pointer-events: none;
-  mix-blend-mode: multiply;
   opacity: 0.8;
   z-index: 0;
 }
@@ -87,9 +86,7 @@
   aspect-ratio: 1 / 1;
   border-radius: 50%;
   padding: 0;
-  background: color-mix(in oklab, var(--paper-card) 85%, transparent);
-  backdrop-filter: saturate(180%) blur(18px);
-  -webkit-backdrop-filter: saturate(180%) blur(18px);
+  background: var(--paper-card);
   border: 1px solid var(--line);
   color: var(--ink);
   display: inline-flex;

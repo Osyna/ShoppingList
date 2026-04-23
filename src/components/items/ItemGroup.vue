@@ -88,6 +88,7 @@ function toggleCollapsed() {
       <ItemRow
         v-for="it in items"
         :key="it.id"
+        v-memo="[it.checked, it.name, it.icon, it.category, it.quantity_value, it.quantity_unit]"
         :item="it"
         :category-name="categoryNameOf(it.category ?? undefined)"
         :category-color="colorFor?.(it)"
