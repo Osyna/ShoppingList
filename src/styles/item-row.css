@@ -33,14 +33,26 @@
 .row {
   position: relative;
   overflow: hidden;
+  border: 1px solid var(--line);
   border-radius: var(--radius);
   margin-bottom: 6px;
-  /* Native off-screen rendering skip. With 258+ rows, this lets iOS Safari
-     drop layout/paint for rows outside the viewport — equivalent to
-     virtualization at zero cost. The intrinsic-size hint (≈ row height incl.
-     margin) keeps the scrollbar stable. */
-  content-visibility: auto;
-  contain-intrinsic-size: 0 54px;
+  background: var(--paper-card);
+  transition: border-color 120ms ease, background 120ms ease;
+  /* Isolate paint so the absolutely-positioned action panel cannot leak
+     outside the row's rounded clip on iOS Safari. `contain: paint` gives
+     us off-screen rasterization caching without the visual glitches that
+     `content-visibility: auto` produces when a row also has absolute
+     children (small red curve in the rounded corners, sub-pixel stripes
+     between rows). */
+  isolation: isolate;
+  contain: paint;
+}
+.row:hover {
+  border-color: var(--line-2);
+}
+.row.row-open,
+.row.row-dragging {
+  border-color: var(--line-2);
 }
 .row.removing {
   transform: translateX(110%);
@@ -49,29 +61,231 @@
   transition: transform 260ms var(--spring-bounce), opacity 220ms ease;
 }
 
+/* ================== Swipe-to-reveal action panel ==================
+   The action buttons (edit, delete) live inside `.row-actions` and sit
+   underneath `.row .item`. Swiping the item left exposes them. The width
+   here MUST match the `ACTIONS_WIDTH` constant in ItemRow.vue.
+   The panel sits flush inside `.row`, which is the rounded card; its
+   right corners are clipped by the row's overflow:hidden so the whole
+   thing reads as a single continuous shape. */
+.row {
+  --row-actions-w: 132px;
+}
+.row-actions {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: var(--row-actions-w);
+  display: flex;
+  /* When the user swipes RIGHT (toggle gesture), the action panel must
+     stay invisible — otherwise the dragging item's sub-pixel box-shadow
+     leaks the panel's red/sage at the bottom edge of the row. */
+  transition: opacity 120ms ease;
+}
+.row.row-swipe-right .row-actions {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ================== Left-side toggle hint ==================
+   Mirrors the action panel on the opposite side. Slides into view as the
+   user swipes right; once `row-will-toggle` is set (offset crosses the
+   commit threshold), the icon snaps to full size + sage to confirm the
+   gesture will fire on release. */
+.row-toggle-hint {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: var(--row-actions-w);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 22px;
+  background: oklch(0.62 0.09 155);
+  color: #fff;
+  opacity: 0;
+  transition: opacity 140ms ease, background 140ms ease;
+  pointer-events: none;
+}
+.row.row-swipe-right .row-toggle-hint {
+  opacity: 1;
+}
+.row.row-will-toggle .row-toggle-hint {
+  background: oklch(0.55 0.13 155); /* deeper sage = "will commit" */
+}
+.row-toggle-hint-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transform-origin: center;
+  transition: transform 120ms var(--spring-bounce);
+}
+.row-action {
+  flex: 1;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  transition: filter 140ms ease, transform 140ms var(--spring);
+  /* Buttons are not interactive until revealed — prevents accidental taps
+     during scroll while the row is at rest. The .row-open class flips this. */
+  pointer-events: none;
+}
+.row-open .row-action {
+  pointer-events: auto;
+}
+.row-action svg {
+  /* Slight pop-in: icons scale up as the panel reveals. */
+  transform: scale(0.8);
+  opacity: 0;
+  transition: transform 240ms var(--spring-bounce) 40ms,
+    opacity 200ms ease 40ms;
+}
+.row-open .row-action svg {
+  transform: scale(1);
+  opacity: 1;
+}
+.row-action:active {
+  filter: brightness(0.92);
+  transform: scale(0.96);
+}
+.row-action-view {
+  /* Sage green — deliberately not `--accent` because the default theme's
+     accent is crimson, which would make View and Delete read as the same
+     button. Sage gives a clear "safe / inspect" affordance against the
+     destructive tomato. */
+  background: oklch(0.62 0.09 155);
+}
+.row-action-delete {
+  background: oklch(0.62 0.16 28); /* warm tomato — sits in the cream/sage palette */
+}
+
 .row .item {
   position: relative;
   background: var(--paper-card);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
   padding: 8px 10px;
   display: flex;
   align-items: center;
   gap: 10px;
-  transition: background 120ms ease, border-color 120ms ease, opacity 120ms ease;
+  transition: background 120ms ease, opacity 120ms ease;
   min-height: 48px;
+  /* The item must fully cover the row at rest so the action panel
+     underneath is invisible until the user swipes. */
+  width: 100%;
+  /* Tap feedback: the whole row is the toggle target. */
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  /* Let the browser handle vertical scroll natively while we capture
+     horizontal pointer movement for the swipe. */
+  touch-action: pan-y;
+  /* Clean sub-pixel rendering during the slide; without this, iOS Safari
+     leaves a faint red horizontal stripe on the row directly below the one
+     being swiped (the action panel's color smears into the next row's
+     compositor layer). */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
-.row .item:hover {
-  border-color: var(--line-2);
-}
-.row .label:active {
-  transform: scale(0.985);
-  transition: transform 80ms var(--spring);
+.row .item:active {
+  background: color-mix(in oklab, var(--paper-card) 92%, var(--ink) 8%);
 }
 
+/* ================== Hit zones ==================
+   Three transparent buttons stacked on top of the visual layer so each
+   region of the row maps to a different action without changing the
+   visible layout. They sit above the visual children but pointer events
+   bubble to `.item`, keeping the swipe gesture intact.
+   - hit-toggle (left ≈ 86px): check / uncheck. Width covers the
+     checkbox + food tile + a margin of slack so taps don't need to be
+     precise.
+   - hit-view (middle): opens the detail/edit form.
+   - hit-actions (right ≈ 36px): same effect as swiping ←, reveals the
+     view/delete panel. */
+.row .item {
+  --hit-toggle-w: 86px;
+  --hit-actions-w: 36px;
+}
+.row .item .hit {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  /* Sit above the visual children so taps land on the hit zone. */
+  z-index: 2;
+}
+.row .item .hit:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -3px;
+  border-radius: var(--radius);
+}
+.row .item .hit-toggle {
+  left: 0;
+  width: var(--hit-toggle-w);
+}
+.row .item .hit-view {
+  left: var(--hit-toggle-w);
+  right: var(--hit-actions-w);
+}
+.row .item .hit-actions {
+  right: 0;
+  width: var(--hit-actions-w);
+}
+/* Make sure the visible label can't extend under the actions hit zone —
+   ellipsis truncates a touch earlier so text and the (invisible) tap
+   target don't visually overlap. */
+.row .item > .label {
+  padding-right: var(--hit-actions-w);
+}
+/* Promote ONLY the actively-interacted row's item to its own GPU layer.
+   Scoping by `.row-dragging` / `.row-open` keeps the 258-row idle layer
+   budget tiny while giving the live row a clean, isolated composite
+   surface — kills the inter-row red bleed. */
+.row.row-dragging .item,
+.row.row-open .item {
+  will-change: transform;
+}
+
+/* Desktop hover-reveal: pointer-fine devices don't have swipe, so reveal
+   the actions on hover. JS only sets inline transform when the row has
+   been swiped; at rest the inline style is empty, letting this rule win. */
+@media (hover: hover) and (pointer: fine) {
+  .row:hover .row-action {
+    pointer-events: auto;
+  }
+  .row:hover .row-action svg {
+    transform: scale(1);
+    opacity: 1;
+  }
+  .row:hover .item {
+    transform: translate3d(calc(-1 * var(--row-actions-w)), 0, 0);
+  }
+}
+
+.row.done {
+  border-color: var(--line);
+}
 .row.done .item {
   background: #faf4e4;
-  border-color: var(--line);
+}
+/* Dim the contents (text, icons, checkbox) on done items, but keep the
+   item's background fully opaque so the action panel underneath stays
+   hidden until the user actually swipes. */
+.row.done .item > * {
   opacity: 0.75;
 }
 .row .label {
@@ -160,6 +374,17 @@
 }
 .check.checked {
   transform: scale(1);
+}
+/* While the check is "pending commit" (animation playing before the emit
+   actually fires), pop the box a touch so the user can see something
+   satisfying happened, even on items that are about to leave the list. */
+.row-checking .check.checked {
+  animation: check-pop 360ms var(--spring-bounce);
+}
+@keyframes check-pop {
+  0%   { transform: scale(0.85); }
+  45%  { transform: scale(1.18); }
+  100% { transform: scale(1); }
 }
 .check.checked:active {
   transform: scale(0.9);
