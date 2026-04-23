@@ -51,6 +51,15 @@ body,
   height: 100%;
 }
 
+/* Lock the page itself from scrolling / bouncing on iOS.
+   - `overflow: hidden` disables body scroll.
+   - `overscroll-behavior: none` disables the rubber-band chain so nothing
+     inside can "pull" the body when it reaches its own scroll boundary.
+   - `position: fixed` + `width: 100%` keep Mobile Safari from giving body
+     any scroll surface at all (which is what produced the perceptible
+     bounce even on short pages).
+   Inner scroll containers (`.phone-scroll`, `.ac-scroll`, etc.) keep
+   their own `overflow-y: auto` and remain the only scrollable surfaces. */
 html,
 body {
   margin: 0;
@@ -59,14 +68,21 @@ body {
   background: var(--paper);
   -webkit-font-smoothing: antialiased;
   font-feature-settings: 'ss01', 'ss02';
+  overflow: hidden;
+  overscroll-behavior: none;
+  position: fixed;
+  inset: 0;
+  width: 100%;
 }
 
 #app {
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   align-items: stretch;
   justify-content: center;
   background: var(--paper);
+  overflow: hidden;
 }
 
 /* Desktop: restore the darker backdrop so the centered card reads as a
