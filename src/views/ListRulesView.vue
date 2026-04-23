@@ -15,7 +15,15 @@ import { listsRepo, itemsRepo } from '../data/repositories'
 import DuplicateResolutionDialog from '../components/items/DuplicateResolutionDialog.vue'
 import ListPresentationSection from '../components/lists/ListPresentationSection.vue'
 import RuleConfigCard from '../components/rules/RuleConfigCard.vue'
+import ConfirmDialog from '../components/common/ConfirmDialog.vue'
 import UiIcon from '../ui/UiIcon.vue'
+import UiButton from '../ui/UiButton.vue'
+import {
+  LIST_ICONS,
+  LIST_PALETTE,
+  softListColor,
+  useListAppearance,
+} from '../composables/useListAppearance'
 
 const props = defineProps<{ id: string }>()
 const router = useRouter()
@@ -124,6 +132,28 @@ function goBack() {
 }
 
 const listName = computed(() => list.value?.name ?? '')
+
+// Inline appearance editor — same picker surface as the modal, but lives
+// in the list's settings page so users can also adjust it from here.
+const { appearance, setAppearance } = useListAppearance(props.id)
+
+// Deletion flow for the whole list, triggered from the settings page.
+const confirmDelete = ref(false)
+const deleting = ref(false)
+async function runDelete() {
+  if (!list.value) return
+  deleting.value = true
+  try {
+    await lists.remove(list.value.id)
+    success(t.lists.deleted ?? 'Liste supprimée')
+    router.push({ name: 'lists' })
+  } catch {
+    error(t.common.networkError)
+  } finally {
+    deleting.value = false
+    confirmDelete.value = false
+  }
+}
 </script>
 
 <template>
@@ -146,6 +176,70 @@ const listName = computed(() => list.value?.name ?? '')
     </div>
 
     <div class="listwrap" style="padding: 8px 20px 28px">
+      <section class="rule-group">
+        <h4>Apparence</h4>
+        <div class="list-appearance-block">
+          <div
+            class="list-appearance-inline"
+            :style="{
+              background: softListColor(appearance.color, 0.14),
+              borderColor: softListColor(appearance.color, 0.4),
+            }"
+          >
+            <span
+              class="list-appearance-inline-tile"
+              :style="{
+                background: softListColor(appearance.color, 0.28),
+                color: appearance.color,
+              }"
+            >
+              <UiIcon :name="appearance.icon" :size="22" />
+            </span>
+            <span class="list-appearance-inline-name">{{ listName }}</span>
+          </div>
+
+          <div class="list-appearance-field-label">Couleur</div>
+          <div class="list-appearance-colors-inline">
+            <button
+              v-for="c in LIST_PALETTE"
+              :key="c"
+              type="button"
+              class="list-color-pick"
+              :class="{ 'is-active': c === appearance.color }"
+              :style="{ background: c }"
+              :aria-label="c"
+              :aria-pressed="c === appearance.color"
+              @click="setAppearance({ color: c })"
+            />
+          </div>
+
+          <div class="list-appearance-field-label">Icône</div>
+          <div class="list-appearance-icons-inline">
+            <button
+              v-for="ic in LIST_ICONS"
+              :key="ic"
+              type="button"
+              class="list-icon-pick"
+              :class="{ 'is-active': ic === appearance.icon }"
+              :style="
+                ic === appearance.icon
+                  ? {
+                      background: softListColor(appearance.color, 0.22),
+                      borderColor: softListColor(appearance.color, 0.55),
+                      color: appearance.color,
+                    }
+                  : {}
+              "
+              :aria-label="ic"
+              :aria-pressed="ic === appearance.icon"
+              @click="setAppearance({ icon: ic })"
+            >
+              <UiIcon :name="ic" :size="18" />
+            </button>
+          </div>
+        </div>
+      </section>
+
       <ListPresentationSection
         :edit-mode="editMode"
         :delete-mode="deleteMode"
@@ -170,7 +264,35 @@ const listName = computed(() => list.value?.name ?? '')
       <p style="text-align: center; color: var(--ink-4); font-size: 12px; padding: 12px 0 4px; margin: 0">
         Les règles s'appliquent uniquement à cette liste.
       </p>
+
+      <section class="rule-group list-danger-zone">
+        <h4>Zone dangereuse</h4>
+        <div class="list-danger-body">
+          <p class="list-danger-copy">
+            Supprimer cette liste retire tous les articles qu'elle contient. Cette action est
+            irréversible.
+          </p>
+          <UiButton
+            variant="danger"
+            icon="delete"
+            :disabled="deleting"
+            @click="confirmDelete = true"
+          >
+            {{ t.lists.delete ?? 'Supprimer la liste' }}
+          </UiButton>
+        </div>
+      </section>
     </div>
+
+    <ConfirmDialog
+      :open="confirmDelete"
+      :title="t.lists.delete ?? 'Supprimer la liste'"
+      :message="t.lists.confirmDelete"
+      :busy="deleting"
+      destructive
+      @confirm="runDelete"
+      @cancel="confirmDelete = false"
+    />
 
     <DuplicateResolutionDialog
       :open="dedupe.duplicates.value.length > 0"

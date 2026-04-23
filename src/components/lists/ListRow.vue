@@ -231,29 +231,21 @@ function onRootKeyDown(e: KeyboardEvent) {
   }
 }
 
-// How far (in px) the panel has entered from the right. 0 = hidden, PANEL_W = fully revealed.
+// How far (in px) the panel has been revealed. 0 = hidden, PANEL_W = fully revealed.
 const revealPx = computed(() => {
   const tx = dragging.value ? dragX.value : isOpen.value ? -PANEL_W : 0
   return Math.max(0, Math.min(PANEL_W, -tx))
 })
 
-// 0 → 1 progress used by styles for staggered fade/scale.
+// 0 → 1 progress used by styles for fade/scale transitions on the actions.
 const panelRevealRatio = computed(() => revealPx.value / PANEL_W)
 
-// Panel slides over the card from the right. At rest closed: translate 100%.
-// At rest open: translate 0%. During drag: interpolated.
-const actionsOffset = computed(() => {
-  const pct = 100 * (1 - revealPx.value / PANEL_W)
-  return `${pct}%`
-})
-
-// Subtle surface nudge so the gesture has tactile feedback without hiding content.
+// The card SURFACE slides left to reveal the fixed actions panel behind
+// it. No more opaque panel sliding on top — the solid card naturally
+// hides the actions when closed, no stacking tricks needed.
 const surfaceOffset = computed(() => {
-  if (!dragging.value) return '0px'
-  const base = isOpen.value ? -PANEL_W : 0
-  const userDelta = dragX.value - base
-  const px = Math.max(-20, Math.min(28, userDelta * 0.14))
-  return `${px}px`
+  if (dragging.value) return `${dragX.value}px`
+  return isOpen.value ? `${-PANEL_W}px` : '0px'
 })
 
 const updatedMeta = computed(() => {
@@ -276,7 +268,6 @@ const updatedMeta = computed(() => {
     :style="{
       '--swipe-panel-w': `${PANEL_W}px`,
       '--swipe-reveal': panelRevealRatio,
-      '--actions-offset': actionsOffset,
       '--surface-offset': surfaceOffset,
       ...cardStyle,
     }"
@@ -364,9 +355,6 @@ const updatedMeta = computed(() => {
           <div class="swipe-card-text">
             <div class="title">{{ list.name }}</div>
             <div class="meta">{{ updatedMeta }}</div>
-          </div>
-          <div class="swipe-card-hint" aria-hidden="true">
-            <span class="swipe-grip" />
           </div>
         </div>
       </template>

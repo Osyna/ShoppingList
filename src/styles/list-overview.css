@@ -20,10 +20,11 @@
 }
 
 .list-card {
-  /* The per-list color comes in via `--list-color*` CSS vars set inline on
-     `.swipe-card`. When unset (e.g. on the new-list placeholder or forms)
-     the vars fall back to the neutral paper-card look. */
-  background: var(--list-color-soft, var(--paper-card));
+  /* Solid base is critical: `.swipe-surface` uses this as its opaque
+     cover over the actions panel behind it. If it were translucent the
+     actions would bleed through at rest. The list's soft color tint is
+     layered on top via `::before` instead of via the base background. */
+  background: var(--paper-card);
   border: 1px solid var(--list-color-border, var(--line));
   border-radius: var(--radius-lg);
   padding: 18px 18px 16px;
@@ -37,6 +38,19 @@
   width: 100%;
   color: inherit;
   text-align: left;
+}
+.list-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--list-color-soft, transparent);
+  pointer-events: none;
+  z-index: 0;
+  border-radius: inherit;
+}
+.list-card > * {
+  position: relative;
+  z-index: 1;
 }
 .list-card:hover {
   transform: translateY(-1px);
@@ -112,7 +126,16 @@
   align-items: center;
 }
 
-/* ================== Swipeable list card ================== */
+/* ================== Swipeable list card ==================
+   Architecture:
+   - `.swipe-card` is a rounded container with `overflow: hidden`.
+   - `.swipe-actions` is pinned to the right side of the card at z-index 0
+     (BEHIND the surface). It is always in its final position; nothing
+     animates on it. No background tricks, no opaque layers, no stacking
+     fights — the actions are just sitting there, hidden by the surface.
+   - `.swipe-surface` has its own solid background and slides LEFT to
+     reveal the actions behind it. This is the iOS Mail / Reminders
+     pattern: the card content peels back and the actions appear. */
 .swipe-card {
   position: relative;
   margin-bottom: 12px;
@@ -122,16 +145,39 @@
   isolation: isolate;
 }
 
-/* The sliding surface — content stays visible; only a tiny tactile nudge during drag. */
+.swipe-card .swipe-actions {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: var(--swipe-panel-w, 224px);
+  padding: 6px 6px 6px 0;
+  display: flex;
+  align-items: stretch;
+  gap: 2px;
+  z-index: 0;
+  pointer-events: none;
+}
+.swipe-card.is-open .swipe-actions,
+.swipe-card.is-dragging .swipe-actions {
+  pointer-events: auto;
+}
+
 .swipe-card .swipe-surface {
   position: relative;
+  z-index: 1;
+  width: 100%;
+  display: block;
   margin-bottom: 0;
+  box-sizing: border-box;
   cursor: pointer;
   touch-action: pan-y;
   transform: translate3d(var(--surface-offset, 0px), 0, 0);
   transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
     border-color 180ms ease, box-shadow 180ms ease;
-  z-index: 1;
+  /* Explicit opaque background belt-and-braces — even if a cascade somewhere
+     unsets `.list-card`'s background, the surface must cover the actions. */
+  background-color: var(--paper-card);
 }
 .swipe-card.is-dragging .swipe-surface {
   transition: none;
@@ -142,39 +188,6 @@
 }
 .swipe-card.is-open .swipe-surface {
   border-color: var(--line-2);
-}
-
-/* Actions panel sits ABOVE the card and slides in from the trailing edge.
-   The background is painted directly on the panel (rather than a `::before`
-   with negative z-index) so the card's text can never bleed through it on
-   iOS when the stacking context gets restructured by the added icon tile. */
-.swipe-card .swipe-actions {
-  position: absolute;
-  top: 6px;
-  right: 0;
-  bottom: 6px;
-  width: var(--swipe-panel-w, 224px);
-  padding: 2px 8px 2px 2px;
-  display: flex;
-  align-items: stretch;
-  gap: 2px;
-  pointer-events: none;
-  z-index: 2;
-  transform: translate3d(var(--actions-offset, 100%), 0, 0);
-  transition: transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: transform;
-  /* Opaque band painted here directly. The 8px right padding ensures the
-     visible band ends short of the card's rounded right edge. */
-  background: var(--paper-2);
-  background-clip: padding-box;
-  border-radius: calc(var(--radius-lg) - 6px);
-  box-shadow: 0 1px 2px rgba(28, 26, 21, 0.05), 0 4px 14px rgba(28, 26, 21, 0.08);
-}
-.swipe-card.is-dragging .swipe-actions {
-  transition: none;
-}
-.swipe-card.is-open .swipe-actions {
-  pointer-events: auto;
 }
 
 .swipe-card .swipe-action {
@@ -244,37 +257,15 @@
   margin-bottom: 0;
 }
 
-/* Trailing grip — subtle vertical bar hinting at the swipe gesture. */
-.swipe-card-hint {
-  flex: 0 0 auto;
-  width: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--ink-4);
-  opacity: calc(1 - var(--swipe-reveal, 0));
-  transition: opacity 200ms ease;
-}
-.swipe-card-hint .swipe-grip {
-  display: inline-block;
-  width: 3px;
-  height: 28px;
-  border-radius: 2px;
-  background: currentColor;
-  opacity: 0.35;
-}
-
-/* Desktop / precise pointer: reveal on hover as a discoverable fallback,
-   since swipe is awkward with a mouse. */
+/* Desktop / precise pointer: ONLY a subtle lift on hover. The hover-slide
+   that used to open the full actions panel was making the card look
+   "broken" at rest because any stray cursor position would trigger it,
+   leaving the surface shifted left and the actions bleeding in. Desktop
+   users reach per-list actions via the list settings page now. */
 @media (hover: hover) and (pointer: fine) {
   .swipe-card:not(.is-editing):hover {
     box-shadow: var(--shadow-card);
   }
-  .swipe-card:not(.is-editing):hover .swipe-actions {
-    transform: translate3d(0, 0, 0) !important;
-    pointer-events: auto;
-  }
-  .swipe-card:not(.is-editing):hover .swipe-card-hint { opacity: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -419,5 +410,130 @@
   gap: 10px;
   justify-content: flex-end;
   margin-top: 4px;
+}
+
+/* ================== List settings: inline appearance editor ==================
+   Lives inside `.rule-group` in ListRulesView. Fixed swatch/icon sizes
+   keep the grid readable whether the viewport is a narrow iPhone or a
+   wide desktop — no more oversized circles filling the full row. */
+.list-appearance-block {
+  padding: 6px 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.list-appearance-field-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-top: 6px;
+}
+.list-appearance-colors-inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.list-color-pick {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  padding: 0;
+  cursor: pointer;
+  flex: 0 0 auto;
+  box-shadow: inset 0 0 0 1px rgba(28, 26, 21, 0.06);
+  transition: transform 160ms var(--spring-bounce),
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+.list-color-pick:hover { transform: scale(1.06); }
+.list-color-pick.is-active {
+  border-color: var(--ink);
+  transform: scale(1.06);
+  box-shadow: 0 0 0 2px var(--paper-card), inset 0 0 0 1px rgba(28, 26, 21, 0.06);
+}
+.list-appearance-icons-inline {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(54px, 1fr));
+  gap: 8px;
+  /* Cap the grid so the cells never stretch on desktop. */
+  max-width: 420px;
+}
+.list-icon-pick {
+  aspect-ratio: 1 / 1;
+  max-width: 60px;
+  border-radius: 12px;
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  color: var(--ink-2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: background 160ms ease, border-color 160ms ease,
+    color 160ms ease, transform 140ms var(--spring-bounce);
+}
+.list-icon-pick:hover {
+  border-color: var(--line-2);
+  color: var(--ink);
+}
+.list-icon-pick.is-active {
+  transform: scale(1.04);
+}
+
+/* ================== List danger zone (settings) ================== */
+.list-danger-zone {
+  border-color: oklch(0.82 0.06 28 / 0.6);
+  background: oklch(0.96 0.02 28);
+}
+.list-danger-zone h4 {
+  color: oklch(0.45 0.14 28);
+}
+.list-danger-body {
+  padding: 4px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.list-danger-copy {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+/* Inline preview used by the list settings page (ListRulesView) — same
+   visual as the modal's preview card but sits flat in the settings flow. */
+.list-appearance-inline {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  transition: background 180ms ease, border-color 180ms ease;
+}
+.list-appearance-inline-tile {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 180ms ease, color 180ms ease;
+}
+.list-appearance-inline-name {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 18px;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
 }
 
