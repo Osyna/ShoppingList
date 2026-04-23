@@ -145,7 +145,7 @@ async function runDelete() {
   deleting.value = true
   try {
     await lists.remove(list.value.id)
-    success(t.lists.deleted ?? 'Liste supprimée')
+    success('Liste supprimée')
     router.push({ name: 'lists' })
   } catch {
     error(t.common.networkError)
