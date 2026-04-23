@@ -27,6 +27,41 @@ export function useItemSearch(options: {
     if (inputEl.value && document.activeElement === inputEl.value) {
       inputEl.value.blur()
     }
+    // A tap outside the search should ONLY close the dropdown — not also
+    // trigger whatever element is underneath (item toggle, settings icon,
+    // etc.). The browser fires click AFTER pointerdown, and by then the
+    // `focused` watch has already detached our listeners. Install a
+    // one-shot click absorber that cancels the very next click and then
+    // cleans itself up.
+    installClickAbsorber()
+  }
+
+  let clickAbsorber: ((e: MouseEvent) => void) | null = null
+  let clickAbsorberTimer: ReturnType<typeof setTimeout> | null = null
+  function installClickAbsorber() {
+    if (clickAbsorber) return
+    const absorb = (e: MouseEvent) => {
+      e.preventDefault()
+      e.stopImmediatePropagation()
+      e.stopPropagation()
+      cleanupClickAbsorber()
+    }
+    clickAbsorber = absorb
+    document.addEventListener('click', absorb, true)
+    // Fallback cleanup in case `click` never fires (e.g. the tap became a
+    // scroll, or the user cancelled the gesture). 400ms is generous
+    // enough to cover any OS-level tap delay.
+    clickAbsorberTimer = setTimeout(cleanupClickAbsorber, 400)
+  }
+  function cleanupClickAbsorber() {
+    if (clickAbsorber) {
+      document.removeEventListener('click', clickAbsorber, true)
+      clickAbsorber = null
+    }
+    if (clickAbsorberTimer) {
+      clearTimeout(clickAbsorberTimer)
+      clickAbsorberTimer = null
+    }
   }
 
   watch(focused, (v) => {
@@ -36,6 +71,7 @@ export function useItemSearch(options: {
 
   onBeforeUnmount(() => {
     document.removeEventListener('pointerdown', onDocumentPointerDown, true)
+    cleanupClickAbsorber()
   })
 
   const trimmed = computed(() => query.value.trim())

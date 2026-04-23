@@ -14,7 +14,6 @@ import ItemToolbar from '../components/items/ItemToolbar.vue'
 import ItemGroup from '../components/items/ItemGroup.vue'
 import ConfirmDialog from '../components/common/ConfirmDialog.vue'
 import UiIcon from '../ui/UiIcon.vue'
-import UiProgressRing from '../ui/UiProgressRing.vue'
 
 const props = defineProps<{ id: string }>()
 const router = useRouter()
@@ -34,7 +33,6 @@ const {
   grouped,
   total,
   remaining,
-  progress,
   allDone,
   canAdd,
   categoryNameOf,
@@ -128,12 +126,9 @@ function scrollToTop() {
       <div class="title-inline">
         <h1>{{ list.name }}</h1>
       </div>
-      <div style="display: inline-flex; align-items: center; gap: 2px">
-        <UiProgressRing :value="progress" :size="28" />
-        <button class="icon-btn" :aria-label="t.rules.manage" @click="openRules">
-          <UiIcon name="settings" :size="18" />
-        </button>
-      </div>
+      <button class="icon-btn" :aria-label="t.rules.manage" @click="openRules">
+        <UiIcon name="settings" :size="18" />
+      </button>
     </div>
 
     <div class="header compact" style="padding: 0 24px 8px">
