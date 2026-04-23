@@ -38,12 +38,21 @@
   left: 0;
   right: 0;
   pointer-events: none;
-  transition: opacity 150ms ease-out, transform 200ms ease-out;
-  will-change: opacity, transform;
+  /* Both properties use the same duration + easing so Vue's
+     transitionend watcher resolves on the first of them to complete —
+     no dangling listener waiting for a property that never moved. */
+  transition: opacity 180ms ease-out, transform 180ms ease-out;
+}
+/* Explicit from-state guarantees Safari a known starting snapshot to
+   interpolate from, instead of reading whatever the previous animation
+   left on the element. */
+.itemfx-leave-from {
+  opacity: 1;
+  transform: translateX(0) scale(1);
 }
 .itemfx-leave-to {
   opacity: 0;
-  transform: translateX(24px) scale(0.97);
+  transform: translateX(20px) scale(0.97);
 }
 
 .row {
@@ -402,18 +411,14 @@
   45%  { transform: scale(1.18); }
   100% { transform: scale(1); }
 }
-/* Wind-up fade on the whole row while the check animation plays. By the
-   time the emit fires (and the row either leaves the list or moves to
-   the "done" group), it's already visually receding — so the DOM removal
-   itself is imperceptible. Pure GPU (opacity), no layout cost. */
-.row-checking {
-  animation: row-winddown 380ms ease-out both;
-}
-@keyframes row-winddown {
-  0%   { opacity: 1; }
-  55%  { opacity: 1; }
-  100% { opacity: 0.55; }
-}
+/* Intentionally no row-level opacity animation here. Previous versions
+   ran an `opacity → 0.55` wind-down during the 380ms pendingCheck window,
+   but CSS animations always win over transitions on the same property, so
+   the leave transition that follows could not fade opacity further. On
+   iOS Safari this caused the `transitionend` event to never fire and the
+   row got stuck in its leave-to (translated + shrunk) visual state.
+   Feedback now comes from the check-pop + ding + `.done` dimming, which
+   don't conflict with the leave transition's opacity. */
 .check.checked:active {
   transform: scale(0.9);
 }

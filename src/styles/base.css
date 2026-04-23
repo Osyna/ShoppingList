@@ -23,10 +23,26 @@ button, [role="button"], a {
   user-select: none;
 }
 
+/* iOS Safari auto-zooms on focus into any input whose computed font-size
+   is <16px. Belt-and-braces: enforce 16px globally on every text input,
+   and additionally on touch devices in case a third-party style reduces
+   the size. Combined with `maximum-scale=1` in the viewport meta, this
+   prevents both pinch-zoom and focus-zoom. */
+input, textarea, select {
+  font-size: 16px;
+}
 @media (hover: none) and (pointer: coarse) {
   input, textarea, select {
     font-size: 16px;
   }
+}
+html {
+  /* Prevent iOS Safari's orientation-change font inflation and any
+     pinch-zoom residual scale leaking into layout. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  /* Disable the extra tap-zoom that fires on double-tap gestures. */
+  touch-action: manipulation;
 }
 
 html,
