@@ -1,33 +1,49 @@
 /* ================== Item row ================== */
 .item-list {
   position: relative;
+  /* Critical iPhone perf win: confines layout/paint work to this subtree
+     so one row checking off never invalidates layout for the rest of the
+     page. Combined with `.row` having its own `contain: paint`, Safari
+     can treat the list as a self-contained rendering unit. */
+  contain: layout style paint;
 }
-.itemfx-move {
-  transition: transform 220ms var(--spring);
-}
+
+/* Enter animation for newly-added items. Cheap: transform + opacity only,
+   both composited on the GPU with no layout impact. */
 .itemfx-enter-active {
-  transition: transform 340ms var(--spring-bounce), opacity 220ms ease;
-}
-.itemfx-leave-active {
-  transition: transform 260ms var(--spring), opacity 200ms ease,
-    max-height 260ms var(--spring), margin 260ms var(--spring);
-  overflow: hidden;
+  transition: transform 300ms var(--spring-bounce), opacity 200ms ease;
 }
 .itemfx-enter-from {
   opacity: 0;
   transform: translateY(-6px) scale(0.98);
-  max-height: 0;
-  margin-bottom: 0;
 }
-.itemfx-enter-to,
-.itemfx-leave-from {
-  max-height: 80px;
+
+/* Leave animation — intentionally GPU-only.
+   Why `position: absolute`: the moment a row starts leaving, we yank it
+   out of normal flow so the remaining siblings can collapse into their
+   new positions in a SINGLE layout pass. No max-height / margin
+   animation (both force per-frame layout and are the main cause of the
+   "resize lag" on iPhone). The detached row then fades + slides on its
+   own compositor layer with zero reflow cost.
+
+   NOTE: we deliberately do NOT define `.itemfx-move` here. Vue's
+   TransitionGroup uses FLIP for move transitions, which requires calling
+   getBoundingClientRect() on every sibling before and after the DOM
+   change — at ~258 rows that's hundreds of synchronous layout-forcing
+   calls on a single toggle. Skipping the move transition means siblings
+   snap to their new positions instantly (one layout pass, imperceptible
+   on a 120Hz display). */
+.itemfx-leave-active {
+  position: absolute;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+  transition: opacity 150ms ease-out, transform 200ms ease-out;
+  will-change: opacity, transform;
 }
 .itemfx-leave-to {
   opacity: 0;
-  transform: translateX(40px);
-  max-height: 0;
-  margin-bottom: 0;
+  transform: translateX(24px) scale(0.97);
 }
 
 .row {
@@ -385,6 +401,18 @@
   0%   { transform: scale(0.85); }
   45%  { transform: scale(1.18); }
   100% { transform: scale(1); }
+}
+/* Wind-up fade on the whole row while the check animation plays. By the
+   time the emit fires (and the row either leaves the list or moves to
+   the "done" group), it's already visually receding — so the DOM removal
+   itself is imperceptible. Pure GPU (opacity), no layout cost. */
+.row-checking {
+  animation: row-winddown 380ms ease-out both;
+}
+@keyframes row-winddown {
+  0%   { opacity: 1; }
+  55%  { opacity: 1; }
+  100% { opacity: 0.55; }
 }
 .check.checked:active {
   transform: scale(0.9);
