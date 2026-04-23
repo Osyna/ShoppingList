@@ -9,6 +9,15 @@
   animation: fsSlide 220ms cubic-bezier(0.2, 0.9, 0.3, 1.2);
   isolation: isolate;
   overflow: hidden;
+  /* Teleport target is `.phone`, which positions us at its border edge
+     (inset: 0 lands ABOVE the parent's padding-top on iOS). Apply the
+     safe-area insets here, once, so the topbar doesn't end up inside the
+     notch and the footer doesn't float above the home indicator. */
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+  box-sizing: border-box;
 }
 .fullscreen-overlay::before {
   content: '';
@@ -72,7 +81,10 @@
   line-height: 1.5;
 }
 .fullscreen-footer {
-  padding: 12px 20px calc(18px + env(safe-area-inset-bottom, 0px));
+  /* safe-area-inset-bottom is already added by `.fullscreen-overlay`'s
+     padding — don't double-count it here or the buttons float several
+     button-heights above the actual bottom. */
+  padding: 12px 20px 18px;
   border-top: 1px solid var(--line);
   background: var(--paper);
   display: flex;

@@ -16,6 +16,10 @@ import { defineAsyncComponent } from 'vue'
 const ShareListDialog = defineAsyncComponent(
   () => import('../components/lists/ShareListDialog.vue')
 )
+// Same story for the appearance picker — modal, rarely opened.
+const ListAppearanceDialog = defineAsyncComponent(
+  () => import('../components/lists/ListAppearanceDialog.vue')
+)
 import type { ShoppingList } from '../types'
 import UiIcon from '../ui/UiIcon.vue'
 import UiInput from '../ui/UiInput.vue'
@@ -47,6 +51,7 @@ const newListName = ref('')
 const showNewListForm = ref(false)
 const toDelete = ref<string | null>(null)
 const shareTarget = ref<ShoppingList | null>(null)
+const appearanceTarget = ref<ShoppingList | null>(null)
 
 const inlineEdit = useInlineEdit(async (id, name) => {
   try {
@@ -190,6 +195,7 @@ const totalLists = computed(() => lists.lists.length)
         @delete="toDelete = l.id"
         @rules="openRules(l.id)"
         @share="shareTarget = l"
+        @appearance="appearanceTarget = l"
       />
     </div>
 
@@ -205,6 +211,11 @@ const totalLists = computed(() => lists.lists.length)
       :list="shareTarget"
       @close="shareTarget = null"
       @updated="(l) => (shareTarget = l)"
+    />
+
+    <ListAppearanceDialog
+      :list="appearanceTarget"
+      @close="appearanceTarget = null"
     />
   </div>
 </template>

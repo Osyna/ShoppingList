@@ -20,14 +20,18 @@
 }
 
 .list-card {
-  background: var(--paper-card);
-  border: 1px solid var(--line);
+  /* The per-list color comes in via `--list-color*` CSS vars set inline on
+     `.swipe-card`. When unset (e.g. on the new-list placeholder or forms)
+     the vars fall back to the neutral paper-card look. */
+  background: var(--list-color-soft, var(--paper-card));
+  border: 1px solid var(--list-color-border, var(--line));
   border-radius: var(--radius-lg);
   padding: 18px 18px 16px;
   margin-bottom: 12px;
   display: block;
   text-decoration: none;
-  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease,
+    background 220ms ease;
   position: relative;
   overflow: hidden;
   width: 100%;
@@ -140,7 +144,10 @@
   border-color: var(--line-2);
 }
 
-/* Actions panel sits ABOVE the card and slides in from the trailing edge. */
+/* Actions panel sits ABOVE the card and slides in from the trailing edge.
+   The background is painted directly on the panel (rather than a `::before`
+   with negative z-index) so the card's text can never bleed through it on
+   iOS when the stacking context gets restructured by the added icon tile. */
 .swipe-card .swipe-actions {
   position: absolute;
   top: 6px;
@@ -153,21 +160,15 @@
   gap: 2px;
   pointer-events: none;
   z-index: 2;
-  /* Hide entirely past the container's right edge. */
   transform: translate3d(var(--actions-offset, 100%), 0, 0);
   transition: transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform;
-}
-
-/* Tint band behind the tiles so they read as a cohesive panel, not floating chips. */
-.swipe-card .swipe-actions::before {
-  content: '';
-  position: absolute;
-  inset: 0 8px 0 0;
+  /* Opaque band painted here directly. The 8px right padding ensures the
+     visible band ends short of the card's rounded right edge. */
   background: var(--paper-2);
+  background-clip: padding-box;
   border-radius: calc(var(--radius-lg) - 6px);
   box-shadow: 0 1px 2px rgba(28, 26, 21, 0.05), 0 4px 14px rgba(28, 26, 21, 0.08);
-  z-index: -1;
 }
 .swipe-card.is-dragging .swipe-actions {
   transition: none;
@@ -212,7 +213,23 @@
 .swipe-card-body {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+}
+
+/* Icon tile on the left of each list card — colored by the list's
+   appearance. Kept visually lightweight so the card still reads as a
+   single surface, not a "chip plus text". */
+.list-card-tile {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--list-color-tile, var(--paper-2));
+  color: var(--list-color, var(--ink-2));
+  transition: background 220ms ease, color 220ms ease;
 }
 .swipe-card-text {
   flex: 1;
@@ -266,5 +283,141 @@
   .swipe-card .swipe-action {
     transition-duration: 0ms !important;
   }
+}
+
+/* ================== List appearance dialog ================== */
+.list-appearance-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(28, 26, 21, 0.32);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 100;
+  animation: list-appearance-fade 160ms ease;
+}
+@keyframes list-appearance-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.list-appearance-dialog {
+  width: 100%;
+  max-width: 420px;
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 20px 20px 16px;
+  box-shadow: var(--shadow-pop);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  animation: list-appearance-pop 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes list-appearance-pop {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.list-appearance-title {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 22px;
+  margin: 0;
+  color: var(--ink);
+}
+.list-appearance-preview {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  transition: background 180ms ease, border-color 180ms ease;
+}
+.list-appearance-preview-tile {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 180ms ease, color 180ms ease;
+}
+.list-appearance-preview-name {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 18px;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+.list-appearance-section-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-top: 2px;
+}
+.list-appearance-colors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.list-color-swatch {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  padding: 0;
+  cursor: pointer;
+  transition: transform 160ms var(--spring-bounce),
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+  box-shadow: 0 1px 2px rgba(28, 26, 21, 0.08);
+}
+.list-color-swatch:hover {
+  transform: scale(1.06);
+}
+.list-color-swatch.is-active {
+  border-color: var(--ink);
+  transform: scale(1.08);
+  box-shadow: 0 0 0 2px var(--paper-card), 0 0 0 4px var(--ink);
+}
+.list-appearance-icons {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+}
+.list-icon-swatch {
+  aspect-ratio: 1 / 1;
+  border-radius: 10px;
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  color: var(--ink-2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: background 160ms ease, border-color 160ms ease,
+    color 160ms ease, transform 140ms var(--spring-bounce);
+}
+.list-icon-swatch:hover {
+  border-color: var(--line-2);
+  color: var(--ink);
+}
+.list-icon-swatch.is-active {
+  transform: scale(1.04);
+}
+.list-appearance-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 4px;
 }
 

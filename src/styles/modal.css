@@ -2,6 +2,13 @@
 .modal-overlay {
   position: fixed;
   inset: 0;
+  /* Stretch the backdrop behind the safe-area insets (notch + home
+     indicator) so the blur/dim covers the entire screen, not just the
+     "safe" content area. Height uses 100dvh (fall back to 100vh) so iOS
+     Safari PWA gets the full dynamic viewport including the home bar. */
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
   background: rgba(28, 26, 21, 0.42);
   backdrop-filter: blur(3px);
   -webkit-backdrop-filter: blur(3px);
@@ -9,7 +16,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px 20px;
+  /* Inner padding accounts for the safe-area so the modal card itself
+     stays inside the visible area while the backdrop continues beneath. */
+  padding:
+    max(24px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right))
+    max(24px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
 }
 .modal-card {
   background: var(--paper);

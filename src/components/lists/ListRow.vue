@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import type { ShoppingList } from '../../types'
 import { useI18n } from '../../i18n'
 import { useSwipeReveal } from '../../composables/useSwipeReveal'
+import { useListAppearance, softListColor } from '../../composables/useListAppearance'
 import UiIcon from '../../ui/UiIcon.vue'
 import UiInput from '../../ui/UiInput.vue'
 import UiButton from '../../ui/UiButton.vue'
@@ -17,7 +18,16 @@ const emit = defineEmits<{
   (e: 'delete'): void
   (e: 'rules'): void
   (e: 'share'): void
+  (e: 'appearance'): void
 }>()
+
+const { appearance } = useListAppearance(props.list.id)
+const cardStyle = computed(() => ({
+  '--list-color': appearance.value.color,
+  '--list-color-soft': softListColor(appearance.value.color, 0.14),
+  '--list-color-border': softListColor(appearance.value.color, 0.4),
+  '--list-color-tile': softListColor(appearance.value.color, 0.22),
+}))
 
 const t = useI18n()
 const router = useRouter()
@@ -46,8 +56,8 @@ function openList() {
 
 // ----- Swipe-to-reveal logic -----
 
-const ACTION_TILE = 56 // px per action tile
-const ACTION_COUNT = 4
+const ACTION_TILE = 54 // px per action tile
+const ACTION_COUNT = 5
 const PANEL_W = ACTION_TILE * ACTION_COUNT
 const OPEN_THRESHOLD = PANEL_W * 0.35
 const NAV_THRESHOLD = 56 // right-swipe distance to open the list
@@ -268,9 +278,19 @@ const updatedMeta = computed(() => {
       '--swipe-reveal': panelRevealRatio,
       '--actions-offset': actionsOffset,
       '--surface-offset': surfaceOffset,
+      ...cardStyle,
     }"
   >
     <div class="swipe-actions" aria-hidden="true">
+      <button
+        type="button"
+        class="swipe-action"
+        aria-label="Apparence"
+        :tabindex="isOpen ? 0 : -1"
+        @click.stop="runAction(() => emit('appearance'))"
+      >
+        <UiIcon name="sparkle" :size="18" />
+      </button>
       <button
         type="button"
         class="swipe-action"
@@ -338,6 +358,9 @@ const updatedMeta = computed(() => {
       </template>
       <template v-else>
         <div class="swipe-card-body">
+          <span class="list-card-tile" aria-hidden="true">
+            <UiIcon :name="appearance.icon" :size="22" />
+          </span>
           <div class="swipe-card-text">
             <div class="title">{{ list.name }}</div>
             <div class="meta">{{ updatedMeta }}</div>
